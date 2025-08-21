@@ -1,0 +1,18 @@
+# Dependencies
+node_modules/
+
+# iOS
+ios/Pods/
+ios/build/
+
+# Android
+android/build/
+
+# Archives / Backups
+*.tar
+*.tar.gz
+*.tgz
+*.bak
+*.backup
+*.sqlite3
+*.sqlite3.*

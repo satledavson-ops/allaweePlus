@@ -1,0 +1,4 @@
+/Users/mac/AllaweePlusBackup/AllaweePlus/android/app/.cxx/Debug/3o1cyt1n/x86_64/CMakeFiles/_CMakeLTOTest-CXX/bin/CMakeFiles/foo.dir
+/Users/mac/AllaweePlusBackup/AllaweePlus/android/app/.cxx/Debug/3o1cyt1n/x86_64/CMakeFiles/_CMakeLTOTest-CXX/bin/CMakeFiles/boo.dir
+/Users/mac/AllaweePlusBackup/AllaweePlus/android/app/.cxx/Debug/3o1cyt1n/x86_64/CMakeFiles/_CMakeLTOTest-CXX/bin/CMakeFiles/edit_cache.dir
+/Users/mac/AllaweePlusBackup/AllaweePlus/android/app/.cxx/Debug/3o1cyt1n/x86_64/CMakeFiles/_CMakeLTOTest-CXX/bin/CMakeFiles/rebuild_cache.dir

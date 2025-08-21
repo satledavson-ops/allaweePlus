@@ -1,0 +1,240 @@
+/* AllaweePlus Website Styles - Modern, Clean, Responsive */
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+  background: #f7f8fa;
+  color: #222;
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+header {
+  background: #b2b2bd;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  position: fixed;
+  width: 100%;
+  z-index: 100;
+}
+nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.2rem 0;
+}
+.logo {
+  font-size: 2rem;
+  font-weight: bold;
+  background: linear-gradient(90deg, #4B2673, #6C2EB7);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.nav-links {
+  display: flex;
+  gap: 2rem;
+  list-style: none;
+}
+.nav-links a {
+  color: #222;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+.nav-links a:hover {
+  color: #6366f1;
+}
+.cta-button {
+  background: linear-gradient(90deg, #4B2673, #6C2EB7);
+  color: #fff;
+  padding: 0.7rem 1.6rem;
+  border-radius: 24px;
+  font-weight: 600;
+  text-decoration: none;
+  box-shadow: 0 4px 16px rgba(99,102,241,0.15);
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+.cta-button:hover {
+  box-shadow: 0 8px 32px rgba(99,102,241,0.25);
+  transform: translateY(-2px);
+}
+
+.hero {
+  background: linear-gradient(120deg, #4B2673 0%, #6C2EB7 100%);
+  color: #fff;
+  padding: 140px 0 80px;
+  text-align: center;
+}
+.hero h1 {
+  font-size: 2.8rem;
+  margin-bottom: 1rem;
+}
+.hero p {
+  font-size: 1.25rem;
+  margin-bottom: 2rem;
+}
+.hero-cta {
+  display: flex;
+  gap: 1.2rem;
+  justify-content: center;
+}
+.btn-primary {
+  background: #fff;
+  color: #6366f1;
+  border: none;
+  padding: 0.8rem 2rem;
+  border-radius: 24px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(99,102,241,0.12);
+  transition: background 0.2s, color 0.2s;
+}
+.btn-primary:hover {
+  background: #4B2673;
+  color: #fff;
+}
+.btn-secondary {
+  background: transparent;
+  color: #fff;
+  border: 2px solid #fff;
+  padding: 0.8rem 2rem;
+  border-radius: 24px;
+  font-weight: 600;
+  font-size: 1rem;
+  text-decoration: none;
+  transition: background 0.2s, color 0.2s;
+}
+.btn-secondary:hover {
+  background: #fff;
+  color: #4B2673;
+}
+
+.features {
+  background: #fff;
+  padding: 80px 0;
+}
+.section-title {
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+.section-title h2 {
+  font-size: 2.2rem;
+  margin-bottom: 0.5rem;
+}
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+}
+.feature-card {
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 2px 12px rgba(76,46,115,0.07);
+  padding: 2rem 1.2rem;
+  text-align: center;
+  transition: box-shadow 0.2s, transform 0.2s;
+  color: #22232a;
+  color: #22232a;
+}
+.feature-card:hover {
+  box-shadow: 0 8px 32px rgba(76,46,115,0.15);
+  transform: translateY(-4px);
+}
+.feature-icon {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.stats {
+  background: #f7f8fa;
+  padding: 60px 0;
+}
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 2rem;
+  text-align: center;
+}
+.stat-item h3 {
+  font-size: 2rem;
+  color: #4B2673;
+  margin-bottom: 0.5rem;
+}
+.stat-item p {
+  color: #444;
+}
+
+.cta-section {
+  background: linear-gradient(120deg, #4B2673 0%, #6C2EB7 100%);
+  color: #fff;
+  padding: 70px 0;
+  text-align: center;
+}
+.cta-section h2 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+.cta-buttons {
+  display: flex;
+  gap: 1.2rem;
+  justify-content: center;
+}
+
+footer {
+  background: #fff;
+  padding: 50px 0 20px;
+  color: #222;
+}
+.footer-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+.footer-section h4 {
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+}
+.footer-section ul {
+  list-style: none;
+  padding: 0;
+}
+.footer-section ul li {
+  margin-bottom: 0.7rem;
+}
+.footer-section ul a {
+  color: #4B2673;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+.footer-section ul a:hover {
+  color: #6C2EB7;
+}
+.footer-bottom {
+  text-align: center;
+  color: #888;
+  font-size: 0.95rem;
+}
+
+@media (max-width: 700px) {
+  .hero h1 {
+    font-size: 2rem;
+  }
+  .features-grid {
+    grid-template-columns: 1fr;
+  }
+  .stats-grid, .footer-grid {
+    grid-template-columns: 1fr;
+  }
+  nav {
+    flex-direction: column;
+    gap: 1rem;
+  }
+}

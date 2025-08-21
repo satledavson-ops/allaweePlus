@@ -1,0 +1,1 @@
+/Users/mac/AllaweePlus/android/app/build/intermediates/cxx/Debug/6qq64314/obj/arm64-v8a

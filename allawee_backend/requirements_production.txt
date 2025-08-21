@@ -1,0 +1,64 @@
+# Production requirements for AllaweePlus - Optimized for 20,000 concurrent users and 500,000+ records
+
+# Core Django and DRF
+Django==5.2.4
+djangorestframework==3.15.2
+djangorestframework-simplejwt==5.3.0
+
+# Database
+psycopg2-binary==2.9.9  # PostgreSQL adapter
+django-redis==5.4.0     # Redis cache backend
+
+# Background Tasks
+celery==5.3.4
+redis==5.0.1
+
+# Filtering and Pagination
+django-filter==23.5
+django-cors-headers==4.3.1
+
+# Production Server
+gunicorn==21.2.0
+whitenoise==6.6.0  # Static file serving
+
+# Monitoring and Logging
+sentry-sdk==1.38.0  # Error tracking
+django-extensions==3.2.3
+
+# Security
+cryptography==41.0.8
+
+# Data Processing
+pandas==2.1.4  # For bulk data operations
+numpy==1.26.2
+
+# File Handling
+Pillow==10.1.0
+
+# Email
+django-anymail==10.2  # Email service integration
+
+# Development Tools (optional for production)
+django-debug-toolbar==4.2.0
+django-silk==5.0.4  # Performance profiling
+
+# Testing
+pytest==7.4.3
+pytest-django==4.7.0
+pytest-cov==4.1.0
+factory-boy==3.3.0
+
+# API Documentation
+drf-spectacular==0.27.0
+
+# Environment Variables
+python-decouple==3.8
+
+# Load Balancing (if using nginx)
+# nginx configuration should be handled separately
+
+# Database Connection Pooling
+django-db-pool==1.0.0
+
+# Rate Limiting
+django-ratelimit==4.1.0

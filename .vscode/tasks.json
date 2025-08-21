@@ -1,0 +1,67 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Run Android App",
+			"type": "shell",
+			"command": "npx react-native run-android",
+			"group": "build",
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Run iOS App",
+			"type": "shell",
+			"command": "npx react-native run-ios",
+			"group": "build",
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Start Metro Bundler",
+			"type": "shell",
+			"command": "npx react-native start",
+			"group": "build",
+			"isBackground": true,
+			"problemMatcher": []
+		},
+		{
+			"label": "Start Django Backend",
+			"type": "shell",
+			"command": "cd allawee_backend && python3 manage.py runserver 8000",
+			"group": "build",
+			"isBackground": true,
+			"problemMatcher": []
+		},
+		{
+			"label": "Start Admin Dashboard",
+			"type": "shell",
+			"command": "cd admin-dashboard && npm start",
+			"group": "build",
+			"isBackground": true,
+			"problemMatcher": []
+		},
+		{
+			"label": "Start All Servers",
+			"dependsOrder": "parallel",
+			"dependsOn": ["Start Metro Bundler", "Start Django Backend", "Start Admin Dashboard"],
+			"group": "build"
+		},
+		{
+			"label": "Clean Android Build",
+			"type": "shell",
+			"command": "cd android && ./gradlew clean",
+			"group": "build",
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Clean iOS Build",
+			"type": "shell", 
+			"command": "cd ios && xcodebuild clean -workspace AllaweePlus.xcworkspace -scheme AllaweePlus",
+			"group": "build",
+			"isBackground": false,
+			"problemMatcher": []
+		}
+	]
+}
