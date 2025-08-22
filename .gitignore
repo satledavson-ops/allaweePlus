@@ -1,18 +1,80 @@
-# Dependencies
+# ------------------------
+# Node / React Native
+# ------------------------
 node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+*.tmp
+*.swp
+*.swo
 
+# Metro / Expo
+.expo/
+.expo-shared/
+dist/
+*.metro-cache/
+.cache/
+
+# ------------------------
 # iOS
-ios/Pods/
+# ------------------------
 ios/build/
+ios/Pods/
+ios/*.xcuserstate
+ios/*.xcuserdata/
+ios/*.xcworkspace/
+ios/build.log
+ios/main.jsbundle
+ios/.xcode.env.local
+ios/assets/
 
+# ------------------------
 # Android
+# ------------------------
+android/.gradle/
+android/.idea/
 android/build/
+android/app/build/
+android/app/.cxx/
+*.iml
+.gradle/
+local.properties
 
-# Archives / Backups
-*.tar
-*.tar.gz
-*.tgz
-*.bak
-*.backup
+# ------------------------
+# Python / Django
+# ------------------------
+**/__pycache__/
+*.py[cod]
 *.sqlite3
 *.sqlite3.*
+*.bak
+*.backup
+*.log
+db.sqlite3*
+venv/
+.venv/
+*.env
+*.env.*
+
+# Django extra
+django.log
+*.pot
+*.pyc
+media/
+staticfiles/
+
+# ------------------------
+# Ruby / Bundler
+# ------------------------
+vendor/
+vendor/bundle/
+
+# ------------------------
+# System / Editor
+# ------------------------
+.DS_Store
+.vscode/
+.idea/
+*.orig

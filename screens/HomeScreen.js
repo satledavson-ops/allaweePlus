@@ -1,3 +1,4 @@
+// screens/HomeScreen.js
 import React, { useState, useEffect } from 'react';
 import {
   View,
@@ -10,8 +11,10 @@ import {
   RefreshControl,
 } from 'react-native';
 import ApiService from '../services/api';
+import { useAuth } from '../context/AuthContext'; // <-- integrate framework (Auth)
 
 export default function HomeScreen({ navigation }) {
+  const { logout } = useAuth(); // <-- use framework logout
   const [dashboardData, setDashboardData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -47,11 +50,16 @@ export default function HomeScreen({ navigation }) {
         {
           text: 'Logout',
           onPress: async () => {
-            await ApiService.logout();
-            navigation.reset({
-              index: 0,
-              routes: [{ name: 'Welcome' }],
-            });
+            try {
+              // If your API has a logout endpoint, keep this:
+              if (ApiService.logout) {
+                await ApiService.logout();
+              }
+            } finally {
+              // With gated navigator, this flips you back to the public stack automatically
+              logout();
+              // No need for navigation.reset({ routes: [{ name: 'Welcome' }] })
+            }
           }
         }
       ]
@@ -79,6 +87,11 @@ export default function HomeScreen({ navigation }) {
         <View style={styles.welcomeBubble}>
           <Text style={styles.welcomeText}>Welcome to AllaweePlus</Text>
         </View>
+
+        {/* Keep your existing logout button placement & style */}
+        <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
+          <Text style={styles.logoutButtonText}>Logout</Text>
+        </TouchableOpacity>
       </View>
 
       {/* Dashboard Cards */}
@@ -198,10 +211,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 50,
     marginHorizontal: 5,
     shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
+    shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
