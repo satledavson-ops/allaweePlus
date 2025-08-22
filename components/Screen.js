@@ -1,23 +1,23 @@
+// components/Screen.js
 import React from 'react';
-import { ImageBackground, View, StyleSheet, Dimensions, KeyboardAvoidingView, Platform } from 'react-native';
-import { colors, spacing } from '../theme/ui';
+import { View, StyleSheet, StatusBar, Platform } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
-const BG_PATTERN = require('../assets/bg_pattern.png');
-const { width, height } = Dimensions.get('window');
-
-export default function Screen({ children, padded = true }) {
+export default function Screen({ children, style }) {
   return (
-    <ImageBackground source={BG_PATTERN} style={styles.bg} resizeMode="repeat">
-      <KeyboardAvoidingView behavior={Platform.select({ ios: 'padding', android: undefined })} style={{ flex: 1 }}>
-        <View style={[styles.overlay, padded && { paddingHorizontal: spacing.xl }]}>
-          {children}
-        </View>
-      </KeyboardAvoidingView>
-    </ImageBackground>
+    <SafeAreaView edges={['top', 'left', 'right']} style={styles.safe}>
+      {/* Ensure content isn't hidden behind the status bar */}
+      <StatusBar
+        barStyle={Platform.OS === 'ios' ? 'dark-content' : 'light-content'}
+        backgroundColor="#ffffff"
+        translucent={false}
+      />
+      <View style={[styles.body, style]}>{children}</View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  bg: { flex: 1, width, height },
-  overlay: { flex: 1, backgroundColor: colors.bgOverlay, justifyContent: 'center' },
+  safe: { flex: 1, backgroundColor: '#F7F7FB' }, // light brand backdrop
+  body: { flex: 1, paddingHorizontal: 20, paddingBottom: 16 },
 });

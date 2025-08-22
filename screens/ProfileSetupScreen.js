@@ -1,198 +1,513 @@
-// screens/ProfileSetupScreen.js
-import React, { useRef, useState } from 'react';
-import { View, Text, StyleSheet, Animated, TouchableOpacity } from 'react-native';
+import React, { useEffect, useMemo, useState } from 'react';
+import {
+  View,
+  Text,
+  ScrollView,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  KeyboardAvoidingView,
+  Platform,
+  ActivityIndicator,
+  Alert,
+  SafeAreaView,
+} from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
-import Screen from '../components/Screen';
-import BrandHeader from '../components/BrandHeader';
-import GradientButton from '../components/GradientButton';
-import TextField from '../components/TextField';
-import StepperDots from '../components/StepperDots';
-import { colors, radius, shadow, spacing, typography } from '../theme/ui';
+import ApiService from '../services/api';
+import { useAuth } from '../context/AuthContext';
 
-const NG_ACCOUNT_LEN = 10;
-const NG_BVN_LEN = 11;
+// helpers
+const safe = (v, fb = '') => (v === undefined || v === null ? fb : String(v));
+const trimObj = (o) =>
+  Object.fromEntries(Object.entries(o).map(([k, v]) => [k, typeof v === 'string' ? v.trim() : v]));
 
 export default function ProfileSetupScreen() {
   const navigation = useNavigation();
-  const [step, setStep] = useState(0);
-  const [nyscStateCode, setNyscStateCode] = useState('');
-  const [certificateName, setCertificateName] = useState('');
-  const [bankName, setBankName] = useState('');
-  const [accountNumber, setAccountNumber] = useState('');
-  const [bvn, setBvn] = useState('');
+  const { setUser, user } = useAuth();
+
+  const [bootLoading, setBootLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [touched, setTouched] = useState({});
 
-  const shakeX = useRef(new Animated.Value(0)).current;
-  const runShake = () => {
-    Animated.sequence([
-      Animated.timing(shakeX, { toValue: 1, duration: 60, useNativeDriver: true }),
-      Animated.timing(shakeX, { toValue: -1, duration: 60, useNativeDriver: true }),
-      Animated.timing(shakeX, { toValue: 1, duration: 60, useNativeDriver: true }),
-      Animated.timing(shakeX, { toValue: 0, duration: 60, useNativeDriver: true }),
-    ]).start();
-  };
-  const shakeStyle = {
-    transform: [{ translateX: shakeX.interpolate({ inputRange: [-1, 0, 1], outputRange: [-8, 0, 8] }) }],
-  };
+  // Form state (grouped to mirror Profile screen)
+  const [personal, setPersonal] = useState({
+    full_name: '',
+    email: '',
+    phone: '',
+    dob: '',
+    address: '',
+  });
+  const [nysc, setNysc] = useState({
+    nysc_callup_no: '',
+    nysc_state_code: '',
+    nysc_year: '',
+    nysc_batch: '',
+    nysc_start: '',
+    nysc_end: '',
+    nysc_ppa: '',
+    nysc_cds: '',
+    nysc_orientation_status: '',
+  });
+  const [bank, setBank] = useState({
+    bank_account_name: '',
+    bank_account_number: '',
+    bank_name: '',
+    bvn: '',
+  });
+  const [nok, setNok] = useState({
+    nok_name: '',
+    nok_relationship: '',
+    nok_phone: '',
+    nok_address: '',
+  });
 
-  const errors = {
-    nyscStateCode: nyscStateCode.trim().length ? '' : 'NYSC State Code is required',
-    certificateName: certificateName.trim().length ? '' : 'Attach your NYSC certificate',
-    bankName: bankName.trim().length ? '' : 'Bank name is required',
-    accountNumber: accountNumber.trim().length === NG_ACCOUNT_LEN ? '' : `Must be ${NG_ACCOUNT_LEN} digits`,
-    bvn: bvn.trim().length === NG_BVN_LEN ? '' : `Must be ${NG_BVN_LEN} digits`,
-  };
+  // Prefill on mount
+  useEffect(() => {
+    (async () => {
+      try {
+        const p = (await ApiService.getProfile?.()) || {};
+        setPersonal({
+          full_name: safe(p.full_name || `${safe(p.first_name)} ${safe(p.last_name)}`.trim()),
+          email: safe(p.email || user?.email),
+          phone: safe(p.phone),
+          dob: safe(p.dob),
+          address: safe(p.address),
+        });
+        setNysc({
+          nysc_callup_no: safe(p.nysc_callup_no),
+          nysc_state_code: safe(p.nysc_state_code),
+          nysc_year: safe(p.nysc_year),
+          nysc_batch: safe(p.nysc_batch),
+          nysc_start: safe(p.nysc_start),
+          nysc_end: safe(p.nysc_end),
+          nysc_ppa: safe(p.nysc_ppa),
+          nysc_cds: safe(p.nysc_cds),
+          nysc_orientation_status: safe(p.nysc_orientation_status),
+        });
+        setBank({
+          bank_account_name: safe(p.bank_account_name || (p.full_name || '').trim()),
+          bank_account_number: safe(p.bank_account_number),
+          bank_name: safe(p.bank_name),
+          bvn: safe(p.bvn),
+        });
+        setNok({
+          nok_name: safe(p.nok_name),
+          nok_relationship: safe(p.nok_relationship),
+          nok_phone: safe(p.nok_phone),
+          nok_address: safe(p.nok_address),
+        });
+      } catch (e) {
+        // minimal fallback
+        setPersonal((prev) => ({ ...prev, email: safe(user?.email) }));
+      } finally {
+        setBootLoading(false);
+      }
+    })();
+  }, [user]);
 
-  const stepValid = () => {
-    if (step === 0) return !errors.nyscStateCode;
-    if (step === 1) return !errors.certificateName;
-    return !errors.bankName && !errors.accountNumber && !errors.bvn;
-  };
+  // Validation
+  const errors = useMemo(() => {
+    const e = {};
+    if (!personal.full_name) e.full_name = 'Full name is required';
+    if (!personal.email) e.email = 'Email is required';
+    if (personal.email && !/^\S+@\S+\.\S+$/.test(personal.email)) e.email = 'Invalid email';
 
-  const markTouched = () => {
-    if (step === 0) setTouched((t) => ({ ...t, nyscStateCode: true }));
-    if (step === 1) setTouched((t) => ({ ...t, certificateName: true }));
-    if (step === 2) setTouched((t) => ({ ...t, bankName: true, accountNumber: true, bvn: true }));
-  };
+    if (bank.bvn && bank.bvn.length !== 11) e.bvn = 'BVN must be 11 digits';
+    if (bank.bank_account_number && bank.bank_account_number.length !== 10)
+      e.bank_account_number = 'Acct No. must be 10 digits';
 
-  const next = () => {
-    markTouched();
-    if (!stepValid()) return runShake();
-    if (step < 2) setStep(step + 1);
-  };
-  const back = () => (step > 0 ? setStep(step - 1) : navigation.goBack());
-  const attach = () => setCertificateName('NYSC_Certificate.pdf'); // placeholder
-  const finish = () => {
-    markTouched();
-    if (!stepValid()) return runShake();
+    return e;
+  }, [personal, bank]);
+
+  const hasErrors = Object.keys(errors).length > 0;
+
+  // Save
+  const onSave = async () => {
+    if (hasErrors) {
+      Alert.alert('Fix form', 'Please correct the highlighted fields.');
+      return;
+    }
     setSaving(true);
-    setTimeout(() => {
+    try {
+      const payload = trimObj({
+        ...personal,
+        ...nysc,
+        ...bank,
+        ...nok,
+      });
+
+      await ApiService.updateProfile?.(payload);
+
+      // reflect in auth context (name/email)
+      if (payload.full_name || payload.email) {
+        setUser?.({
+          ...(user || {}),
+          name: payload.full_name || user?.name,
+          email: payload.email || user?.email,
+        });
+      }
+
+      Alert.alert('Saved', 'Your profile has been updated.', [
+        { text: 'OK', onPress: () => navigation.goBack() },
+      ]);
+    } catch (e) {
+      Alert.alert('Error', 'Could not save profile. Please try again.');
+    } finally {
       setSaving(false);
-      navigation.navigate('Home');
-    }, 800);
+    }
   };
+
+  // Field component (matching Welcome/Register style)
+  const Field = ({
+    label,
+    value,
+    onChangeText,
+    placeholder,
+    keyboardType,
+    secureTextEntry,
+    error,
+    editable = true,
+  }) => (
+    <View style={styles.field}>
+      <Text style={styles.label}>{label}</Text>
+      <TextInput
+        style={[
+          styles.input,
+          !!error && styles.inputError,
+          !editable && styles.inputDisabled,
+        ]}
+        placeholder={placeholder}
+        placeholderTextColor="#888"
+        value={value}
+        onChangeText={onChangeText}
+        autoCapitalize="none"
+        autoCorrect={false}
+        keyboardType={keyboardType}
+        secureTextEntry={secureTextEntry}
+        editable={editable}
+      />
+      {!!error && <Text style={styles.errorText}>{error}</Text>}
+    </View>
+  );
+
+  if (bootLoading) {
+    return (
+      <SafeAreaView style={[styles.container, styles.center]}>
+        <ActivityIndicator size="large" color="#4B006E" />
+        <Text style={{ marginTop: 8, color: '#666' }}>Loading profile…</Text>
+      </SafeAreaView>
+    );
+  }
 
   return (
-    <Screen>
-      <BrandHeader title="Profile setup" onBack={() => navigation.goBack()} />
-      <StepperDots current={step} total={3} />
+    <SafeAreaView style={styles.container}>
+      <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior={Platform.select({ ios: 'padding', android: undefined })}
+      >
+        <ScrollView
+          contentContainerStyle={{ paddingBottom: 28 }}
+          style={styles.scroll}
+        >
+          {/* Title (top-aligned like your Register screen) */}
+          <Text style={styles.title}>Edit Profile</Text>
 
-      <Animated.View style={[styles.card, shakeStyle]}>
-        {step === 0 && (
-          <>
-            <Text style={typography.h2}>NYSC Details</Text>
-            <TextField
-              label="NYSC State Code"
-              placeholder="e.g. AB/20A/1234"
-              value={nyscStateCode}
-              onChangeText={setNyscStateCode}
-              onBlur={() => setTouched((t) => ({ ...t, nyscStateCode: true }))}
-              autoCapitalize="characters"
-              error={touched.nyscStateCode && errors.nyscStateCode}
+          {/* Personal */}
+          <Section title="Personal Information">
+            <Field
+              label="Full Name"
+              placeholder="e.g. Davson George Satle"
+              value={personal.full_name}
+              onChangeText={(v) => setPersonal((s) => ({ ...s, full_name: v }))}
+              error={errors.full_name}
             />
-          </>
-        )}
+            <Field
+              label="Email"
+              placeholder="you@example.com"
+              value={personal.email}
+              onChangeText={(v) => setPersonal((s) => ({ ...s, email: v }))}
+              keyboardType="email-address"
+              error={errors.email}
+            />
+            <Field
+              label="Phone"
+              placeholder="+234 80 1234 5678"
+              value={personal.phone}
+              onChangeText={(v) => setPersonal((s) => ({ ...s, phone: v }))}
+              keyboardType="phone-pad"
+            />
+            <Field
+              label="Date of Birth"
+              placeholder="YYYY-MM-DD"
+              value={personal.dob}
+              onChangeText={(v) => setPersonal((s) => ({ ...s, dob: v }))}
+              keyboardType="numbers-and-punctuation"
+            />
+            <Field
+              label="Address"
+              placeholder="Residential address"
+              value={personal.address}
+              onChangeText={(v) => setPersonal((s) => ({ ...s, address: v }))}
+            />
+          </Section>
 
-        {step === 1 && (
-          <>
-            <Text style={typography.h2}>NYSC Certificate</Text>
-            <Text style={[typography.label, { marginBottom: spacing.sm, marginTop: spacing.md }]}>
-              Upload your certificate
-            </Text>
-            <TouchableOpacity activeOpacity={0.9} onPress={attach} style={styles.attachBox}>
-              <Text style={{ color: '#555', fontSize: 14, fontWeight: '600' }}>
-                {certificateName ? `Attached: ${certificateName}` : 'Tap to attach (PDF/Image)'}
-              </Text>
-            </TouchableOpacity>
-            {!!touched.certificateName && !!errors.certificateName && (
-              <Text style={styles.err}>{errors.certificateName}</Text>
-            )}
-          </>
-        )}
+          {/* NYSC */}
+          <Section title="NYSC Information">
+            <Field
+              label="Call-up Number"
+              placeholder="NYSC/FCT/2023/1234567"
+              value={nysc.nysc_callup_no}
+              onChangeText={(v) => setNysc((s) => ({ ...s, nysc_callup_no: v }))}
+            />
+            <Field
+              label="State Code"
+              placeholder="PL/23C/4567"
+              value={nysc.nysc_state_code}
+              onChangeText={(v) => setNysc((s) => ({ ...s, nysc_state_code: v }))}
+            />
+            <View style={styles.row}>
+              <View style={{ flex: 1, marginRight: 8 }}>
+                <Field
+                  label="Service Year"
+                  placeholder="2023"
+                  value={nysc.nysc_year}
+                  onChangeText={(v) => setNysc((s) => ({ ...s, nysc_year: v }))}
+                  keyboardType="number-pad"
+                />
+              </View>
+              <View style={{ flex: 1, marginLeft: 8 }}>
+                <Field
+                  label="Batch"
+                  placeholder="A / B / C"
+                  value={nysc.nysc_batch}
+                  onChangeText={(v) => setNysc((s) => ({ ...s, nysc_batch: v }))}
+                />
+              </View>
+            </View>
+            <View style={styles.row}>
+              <View style={{ flex: 1, marginRight: 8 }}>
+                <Field
+                  label="Start Date"
+                  placeholder="YYYY-MM-DD"
+                  value={nysc.nysc_start}
+                  onChangeText={(v) => setNysc((s) => ({ ...s, nysc_start: v }))}
+                  keyboardType="numbers-and-punctuation"
+                />
+              </View>
+              <View style={{ flex: 1, marginLeft: 8 }}>
+                <Field
+                  label="End Date"
+                  placeholder="YYYY-MM-DD"
+                  value={nysc.nysc_end}
+                  onChangeText={(v) => setNysc((s) => ({ ...s, nysc_end: v }))}
+                  keyboardType="numbers-and-punctuation"
+                />
+              </View>
+            </View>
+            <Field
+              label="PPA"
+              placeholder="Place of Primary Assignment"
+              value={nysc.nysc_ppa}
+              onChangeText={(v) => setNysc((s) => ({ ...s, nysc_ppa: v }))}
+            />
+            <Field
+              label="CDS Group"
+              placeholder="e.g. Education"
+              value={nysc.nysc_cds}
+              onChangeText={(v) => setNysc((s) => ({ ...s, nysc_cds: v }))}
+            />
+            <Field
+              label="Orientation Status"
+              placeholder="Completed / Pending"
+              value={nysc.nysc_orientation_status}
+              onChangeText={(v) =>
+                setNysc((s) => ({ ...s, nysc_orientation_status: v }))
+              }
+            />
+          </Section>
 
-        {step === 2 && (
-          <>
-            <Text style={typography.h2}>Bank & BVN</Text>
-            <TextField
-              label="Bank Name"
-              placeholder="e.g. Access Bank"
-              value={bankName}
-              onChangeText={setBankName}
-              onBlur={() => setTouched((t) => ({ ...t, bankName: true }))}
-              autoCapitalize="words"
-              error={touched.bankName && errors.bankName}
+          {/* Bank */}
+          <Section title="Bank Information">
+            <Field
+              label="Account Name"
+              placeholder="e.g. John Doe"
+              value={bank.bank_account_name}
+              onChangeText={(v) => setBank((s) => ({ ...s, bank_account_name: v }))}
             />
-            <TextField
-              label="Account Number"
-              placeholder={`${NG_ACCOUNT_LEN}-digit account number`}
-              value={accountNumber}
-              onChangeText={(s) => setAccountNumber(s.replace(/\D/g, '').slice(0, NG_ACCOUNT_LEN))}
-              onBlur={() => setTouched((t) => ({ ...t, accountNumber: true }))}
-              keyboardType="number-pad"
-              autoCapitalize="none"
-              error={touched.accountNumber && errors.accountNumber}
-            />
-            <TextField
+            <View style={styles.row}>
+              <View style={{ flex: 1, marginRight: 8 }}>
+                <Field
+                  label="Account Number"
+                  placeholder="10 digits"
+                  value={bank.bank_account_number}
+                  onChangeText={(v) =>
+                    setBank((s) => ({ ...s, bank_account_number: v }))
+                  }
+                  keyboardType="number-pad"
+                  error={errors.bank_account_number}
+                />
+              </View>
+              <View style={{ flex: 1, marginLeft: 8 }}>
+                <Field
+                  label="Bank"
+                  placeholder="e.g. First Bank"
+                  value={bank.bank_name}
+                  onChangeText={(v) => setBank((s) => ({ ...s, bank_name: v }))}
+                />
+              </View>
+            </View>
+            <Field
               label="BVN"
-              placeholder={`${NG_BVN_LEN}-digit BVN`}
-              value={bvn}
-              onChangeText={(s) => setBvn(s.replace(/\D/g, '').slice(0, NG_BVN_LEN))}
-              onBlur={() => setTouched((t) => ({ ...t, bvn: true }))}
+              placeholder="11 digits"
+              value={bank.bvn}
+              onChangeText={(v) => setBank((s) => ({ ...s, bvn: v.replace(/\D/g, '') }))}
               keyboardType="number-pad"
-              autoCapitalize="none"
-              error={touched.bvn && errors.bvn}
+              error={errors.bvn}
             />
-          </>
-        )}
+          </Section>
 
-        <View style={styles.actions}>
-          <TouchableOpacity onPress={back} style={styles.ghostBtn}>
-            <Text style={styles.ghostText}>Back</Text>
-          </TouchableOpacity>
+          {/* Next of Kin */}
+          <Section title="Next of Kin">
+            <Field
+              label="Full Name"
+              placeholder="e.g. Jane Doe"
+              value={nok.nok_name}
+              onChangeText={(v) => setNok((s) => ({ ...s, nok_name: v }))}
+            />
+            <Field
+              label="Relationship"
+              placeholder="e.g. Sister"
+              value={nok.nok_relationship}
+              onChangeText={(v) =>
+                setNok((s) => ({ ...s, nok_relationship: v }))
+              }
+            />
+            <Field
+              label="Phone"
+              placeholder="+234 80 9876 5432"
+              value={nok.nok_phone}
+              onChangeText={(v) => setNok((s) => ({ ...s, nok_phone: v }))}
+              keyboardType="phone-pad"
+            />
+            <Field
+              label="Address"
+              placeholder="Address"
+              value={nok.nok_address}
+              onChangeText={(v) => setNok((s) => ({ ...s, nok_address: v }))}
+            />
+          </Section>
 
-          {step < 2 ? (
-            <GradientButton title="Next" onPress={next} />
-          ) : (
-            <GradientButton title="Finish" onPress={finish} loading={saving} />
-          )}
-        </View>
-      </Animated.View>
+          {/* Save button (gradient) */}
+          <View style={{ paddingHorizontal: 20, marginTop: 12 }}>
+            <TouchableOpacity
+              activeOpacity={0.9}
+              onPress={onSave}
+              disabled={saving}
+              style={{ width: '100%' }}
+            >
+              <LinearGradient
+                colors={['#6B0AA3', '#4B006E']}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 1 }}
+                style={[styles.primaryButton, saving && { opacity: 0.7 }]}
+              >
+                {saving ? (
+                  <ActivityIndicator size="small" color="#fff" />
+                ) : (
+                  <Text style={styles.primaryButtonText}>Save Changes</Text>
+                )}
+              </LinearGradient>
+            </TouchableOpacity>
+          </View>
 
-      <View style={{ alignItems: 'center', marginTop: spacing.md }}>
-        <Text style={typography.hint}>You can update these later in Profile.</Text>
-      </View>
-    </Screen>
+          <View style={{ height: 30 }} />
+        </ScrollView>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 }
 
+function Section({ title, children }) {
+  return (
+    <View style={styles.section}>
+      <Text style={styles.sectionTitle}>{title}</Text>
+      <View style={styles.card}>{children}</View>
+    </View>
+  );
+}
+
+/* --------------------------- styles --------------------------- */
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#ffffff', // same base as Welcome/Register
+  },
+  scroll: {
+    paddingHorizontal: 20,
+  },
+
+  title: {
+    fontSize: 26,
+    fontWeight: '800',
+    color: '#4B006E',
+    marginTop: 10,       // top-aligned (SafeArea) with subtle spacing like Register
+    marginBottom: 10,
+  },
+
+  section: {
+    marginTop: 10,
+  },
+  sectionTitle: {
+    fontSize: 16,
+    fontWeight: '800',
+    color: '#4B006E',
+    marginBottom: 8,
+  },
   card: {
-    padding: spacing.lg,
-    borderRadius: radius.xl,
+    backgroundColor: 'rgba(255,255,255,0.96)',
+    borderRadius: 14,
+    padding: 14,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.08,
+    shadowRadius: 4,
+    elevation: 2,
+  },
+
+  field: { marginBottom: 12 },
+  label: { fontSize: 13, color: '#666', marginBottom: 6, fontWeight: '600' },
+  input: {
+    width: '100%',
+    height: 48,
+    borderWidth: 1,
+    borderColor: '#A259C6',
+    borderRadius: 12,
+    paddingHorizontal: 14,
     backgroundColor: '#fff',
-    ...shadow.card,
+    fontSize: 16,
   },
-  attachBox: {
+  inputError: { borderColor: '#d93025' },
+  inputDisabled: { backgroundColor: '#f6f6f6', color: '#999' },
+  errorText: { marginTop: 6, color: '#d93025', fontSize: 12.5 },
+
+  primaryButton: {
+    width: '100%',
     height: 52,
-    borderRadius: radius.md,
-    borderWidth: 1,
-    borderColor: colors.line,
-    alignItems: 'center',
+    borderRadius: 14,
     justifyContent: 'center',
-    backgroundColor: '#fafafa',
-  },
-  err: { color: colors.danger, marginTop: spacing.xs, fontSize: 13 },
-  actions: { flexDirection: 'row', marginTop: spacing.lg, alignItems: 'center' },
-  ghostBtn: {
-    paddingHorizontal: spacing.lg,
-    height: 52,
-    borderRadius: radius.lg,
-    borderWidth: 1,
-    borderColor: '#ddd',
     alignItems: 'center',
-    justifyContent: 'center',
-    marginRight: spacing.sm,
+    shadowColor: '#000',
+    shadowOpacity: 0.08,
+    shadowOffset: { width: 0, height: 4 },
+    shadowRadius: 10,
+    elevation: 2,
   },
-  ghostText: { color: '#555', fontSize: 15, fontWeight: '700' },
+  primaryButtonText: {
+    color: '#fff',
+    fontSize: 17,
+    fontWeight: '800',
+  },
+
+  center: { justifyContent: 'center', alignItems: 'center' },
+  row: { flexDirection: 'row' },
 });

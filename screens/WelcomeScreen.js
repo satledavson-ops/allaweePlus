@@ -1,20 +1,29 @@
 // screens/WelcomeScreen.js
 import React, { useRef, useState } from 'react';
 import {
-  View, Text, TextInput, TouchableOpacity, Image, StyleSheet,
-  ImageBackground, Dimensions, KeyboardAvoidingView, Platform,
-  Animated, ActivityIndicator
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  Image,
+  StyleSheet,
+  ImageBackground,
+  Dimensions,
+  KeyboardAvoidingView,
+  Platform,
+  Animated,
+  ActivityIndicator
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import LinearGradient from 'react-native-linear-gradient';
-import { useAuth } from '../context/AuthContext'; // ✅ temp auth
+import { useAuth } from '../context/AuthContext';
 
 const BG_PATTERN = require('../assets/bg_pattern.png');
 const LOGO = require('../assets/AllaweePlus_Logo_Dark.png');
 
 export default function WelcomeScreen() {
   const navigation = useNavigation();
-  const { login } = useAuth(); // ✅ temp login (no verification)
+  const { login } = useAuth(); // temp login (accepts any creds, persists token)
 
   const [user, setUser] = useState('');
   const [pass, setPass] = useState('');
@@ -23,7 +32,7 @@ export default function WelcomeScreen() {
 
   const canSubmit = user.trim().length > 0 && pass.length > 0;
 
-  // Shake animation for invalid
+  // Shake animation for invalid input
   const shakeX = useRef(new Animated.Value(0)).current;
   const runShake = () => {
     shakeX.setValue(0);
@@ -48,15 +57,22 @@ export default function WelcomeScreen() {
       if (!canSubmit) runShake();
       return;
     }
-    setLoading(true);
-    // ✅ TEMP: accept any credentials; auth gating will navigate to Home
-    await login(user, pass);
-    setLoading(false);
+    try {
+      setLoading(true);
+      await login(user, pass); // store dev token + user
+      // ✅ go to Home and remove Welcome from history
+      navigation.replace('Home');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <ImageBackground source={BG_PATTERN} style={styles.bg} resizeMode="repeat">
-      <KeyboardAvoidingView behavior={Platform.select({ ios: 'padding', android: undefined })} style={{ flex: 1 }}>
+      <KeyboardAvoidingView
+        behavior={Platform.select({ ios: 'padding', android: undefined })}
+        style={{ flex: 1 }}
+      >
         <View style={styles.container}>
           <Image source={LOGO} style={styles.logo} />
           <Text style={styles.signInText}>Sign in</Text>
@@ -103,7 +119,12 @@ export default function WelcomeScreen() {
             </TouchableOpacity>
           </View>
 
-          <TouchableOpacity activeOpacity={0.9} onPress={onLogin} disabled={loading} style={{ width: '100%' }}>
+          <TouchableOpacity
+            activeOpacity={0.9}
+            onPress={onLogin}
+            disabled={loading}
+            style={{ width: '100%' }}
+          >
             <LinearGradient
               colors={['#6B0AA3', '#4B006E']}
               start={{ x: 0, y: 0 }}
@@ -118,7 +139,10 @@ export default function WelcomeScreen() {
 
           <View style={styles.registerRow}>
             <Text style={styles.registerPrompt}>Don’t have an account?</Text>
-            <TouchableOpacity style={styles.registerButton} onPress={() => navigation.navigate('Register')}>
+            <TouchableOpacity
+              style={styles.registerButton}
+              onPress={() => navigation.navigate('Register')}
+            >
               <LinearGradient
                 colors={['#A259C6', '#8C3FB3']}
                 start={{ x: 0, y: 0 }}
@@ -155,7 +179,8 @@ const styles = StyleSheet.create({
   passRow: { flexDirection: 'row', alignItems: 'center' },
   eyeBtn: {
     marginLeft: 8, height: 48, paddingHorizontal: 12, borderRadius: 10,
-    borderWidth: 1, borderColor: '#ddd', alignItems: 'center', justifyContent: 'center', backgroundColor: '#fafafa',
+    borderWidth: 1, borderColor: '#ddd',
+    alignItems: 'center', justifyContent: 'center', backgroundColor: '#fafafa',
   },
   eyeText: { color: '#555', fontSize: 13, fontWeight: '600' },
 

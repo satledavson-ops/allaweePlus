@@ -1,0 +1,441 @@
+.
+├── __tests__
+│   └── App.test.tsx
+├── admin-dashboard
+│   ├── AdminDashboard.css
+│   ├── AdminDashboard.js
+│   ├── package-lock.json
+│   ├── package.json
+│   ├── public
+│   │   └── index.html
+│   ├── README.md
+│   └── src
+│       ├── AdminDashboard.css
+│       ├── AdminDashboard.js
+│       ├── apiService.js
+│       └── index.js
+├── allawee_backend
+│   ├── accounts
+│   │   ├── __init__.py
+│   │   ├── __pycache__
+│   │   │   ├── __init__.cpython-313.pyc
+│   │   │   ├── admin.cpython-313.pyc
+│   │   │   ├── apps.cpython-313.pyc
+│   │   │   ├── models.cpython-313.pyc
+│   │   │   ├── serializers.cpython-313.pyc
+│   │   │   ├── tests.cpython-313.pyc
+│   │   │   ├── urls.cpython-313.pyc
+│   │   │   └── views.cpython-313.pyc
+│   │   ├── admin.py
+│   │   ├── apps.py
+│   │   ├── migrations
+│   │   │   ├── __init__.py
+│   │   │   ├── __pycache__
+│   │   │   │   ├── __init__.cpython-313.pyc
+│   │   │   │   ├── 0001_initial.cpython-313.pyc
+│   │   │   │   ├── 0002_auto_20250806_2346.cpython-313.pyc
+│   │   │   │   ├── 0003_loanproduct_userprofile_created_at_and_more.cpython-313.pyc
+│   │   │   │   ├── 0004_add_performance_indexes_sqlite.cpython-313.pyc
+│   │   │   │   ├── 0004_add_performance_indexes.cpython-313.pyc
+│   │   │   │   └── 0005_merge_20250810_0049.cpython-313.pyc
+│   │   │   ├── 0001_initial.py
+│   │   │   ├── 0002_auto_20250806_2346.py
+│   │   │   ├── 0003_loanproduct_userprofile_created_at_and_more.py
+│   │   │   ├── 0004_add_performance_indexes_sqlite.py
+│   │   │   ├── 0004_add_performance_indexes.py
+│   │   │   └── 0005_merge_20250810_0049.py
+│   │   ├── models.py
+│   │   ├── serializers.py
+│   │   ├── tasks.py
+│   │   ├── testcases
+│   │   │   ├── test_end_to_end.py
+│   │   │   └── tests
+│   │   │       ├── __init__.py
+│   │   │       ├── __pycache__
+│   │   │       └── test_end_to_end.py
+│   │   ├── tests
+│   │   │   └── test_end_to_end.py
+│   │   ├── tests.py
+│   │   ├── urls.py
+│   │   ├── views_optimized.py
+│   │   └── views.py
+│   ├── cms
+│   │   ├── __init__.py
+│   │   ├── __pycache__
+│   │   │   ├── __init__.cpython-313.pyc
+│   │   │   ├── admin.cpython-313.pyc
+│   │   │   ├── apps.cpython-313.pyc
+│   │   │   └── models.cpython-313.pyc
+│   │   ├── admin.py
+│   │   ├── apps.py
+│   │   ├── migrations
+│   │   │   ├── __init__.py
+│   │   │   ├── __pycache__
+│   │   │   │   ├── __init__.cpython-313.pyc
+│   │   │   │   ├── 0001_initial.cpython-313.pyc
+│   │   │   │   └── 0002_announcement.cpython-313.pyc
+│   │   │   ├── 0001_initial.py
+│   │   │   └── 0002_announcement.py
+│   │   ├── models.py
+│   │   ├── templates
+│   │   │   └── cms
+│   │   │       └── page.html
+│   │   ├── urls.py
+│   │   └── views.py
+│   ├── core
+│   │   ├── __init__.py
+│   │   ├── __pycache__
+│   │   │   ├── __init__.cpython-313.pyc
+│   │   │   ├── settings_postgresql.cpython-313.pyc
+│   │   │   ├── settings.cpython-313.pyc
+│   │   │   ├── urls.cpython-313.pyc
+│   │   │   └── wsgi.cpython-313.pyc
+│   │   ├── asgi.py
+│   │   ├── celery.py
+│   │   ├── settings_postgresql.py
+│   │   ├── settings_production.py
+│   │   ├── settings.py
+│   │   ├── urls.py
+│   │   └── wsgi.py
+│   ├── data_backup_pre_postgresql.json
+│   ├── db.sqlite3.backup
+│   ├── db.sqlite3.pre-postgresql-migration
+│   ├── django.log
+│   ├── manage.py
+│   ├── requirements_production.txt
+│   ├── requirements.txt
+│   ├── THE_BIG_BLACKHOLE_database_backup.json
+│   └── venv
+│       ├── bin
+│       │   ├── activate
+│       │   ├── activate.csh
+│       │   ├── activate.fish
+│       │   ├── Activate.ps1
+│       │   ├── django-admin
+│       │   ├── normalizer
+│       │   ├── pip
+│       │   ├── pip3
+│       │   ├── pip3.13
+│       │   ├── py.test
+│       │   ├── pygmentize
+│       │   ├── pytest
+│       │   ├── python -> python3.13
+│       │   ├── python3 -> python3.13
+│       │   ├── python3.13 -> /opt/homebrew/opt/python@3.13/bin/python3.13
+│       │   └── sqlformat
+│       ├── include
+│       │   └── python3.13
+│       ├── lib
+│       │   └── python3.13
+│       │       └── site-packages
+│       └── pyvenv.cfg
+├── android
+│   ├── app
+│   │   ├── build.gradle
+│   │   ├── debug.keystore
+│   │   ├── proguard-rules.pro
+│   │   └── src
+│   │       ├── debug
+│   │       │   └── AndroidManifest.xml
+│   │       └── main
+│   │           ├── AndroidManifest.xml
+│   │           ├── java
+│   │           └── res
+│   ├── build.gradle
+│   ├── gradle
+│   │   └── wrapper
+│   │       ├── gradle-wrapper.jar
+│   │       └── gradle-wrapper.properties
+│   ├── gradle.properties
+│   ├── gradlew
+│   ├── gradlew.bat
+│   └── settings.gradle
+├── App.js
+├── app.json
+├── App.tsx
+├── assets
+│   ├── AllaweePlus_Animation.json
+│   ├── AllaweePlus_Animationn.json
+│   ├── AllaweePlus_Animationn.lottie
+│   ├── AllaweePlus_Animationnn.json
+│   ├── AllaweePlus_Logo_Dark.png
+│   ├── AllaweePlus_Logo_Dark.svg
+│   ├── AllaweePlus_Logo_Light.png
+│   ├── AllaweePlus_Logo.png
+│   ├── Allowee Plus - BG.ai
+│   ├── AnimationSound.mp3
+│   ├── bg_pattern.png
+│   └── bg_pattern.svg
+├── babel.config.js
+├── components
+│   ├── AuthLayout.js
+│   ├── BrandHeader.js
+│   ├── GradientButton.js
+│   ├── Screen.js
+│   ├── StepperDots.js
+│   └── TextField.js
+├── context
+│   └── AuthContext.js
+├── deployment
+│   ├── # Code Citations.md
+│   ├── deploy_allaweeplus.sh
+│   ├── deploy_production.sh
+│   └── monitor_performance.sh
+├── final_test.py
+├── Gemfile
+├── Gemfile.lock
+├── generate_test_data.py
+├── index.js
+├── ios
+│   ├── AllaweePlus
+│   │   ├── AppDelegate.swift
+│   │   ├── Images.xcassets
+│   │   │   ├── AppIcon.appiconset
+│   │   │   │   └── Contents.json
+│   │   │   └── Contents.json
+│   │   ├── Info.plist
+│   │   ├── LaunchScreen.storyboard
+│   │   └── PrivacyInfo.xcprivacy
+│   ├── AllaweePlus.xcodeproj
+│   │   ├── project.pbxproj
+│   │   ├── project.xcworkspace
+│   │   │   └── xcshareddata
+│   │   │       └── swiftpm
+│   │   └── xcshareddata
+│   │       └── xcschemes
+│   │           └── AllaweePlus.xcscheme
+│   ├── AllaweePlus.xcworkspace
+│   │   ├── contents.xcworkspacedata
+│   │   ├── xcshareddata
+│   │   │   └── swiftpm
+│   │   │       └── configuration
+│   │   └── xcuserdata
+│   │       └── mac.xcuserdatad
+│   │           └── UserInterfaceState.xcuserstate
+│   ├── assets
+│   ├── build.log
+│   ├── main.jsbundle
+│   ├── Podfile
+│   └── Podfile.lock
+├── jest.config.js
+├── metro.config.js
+├── MILESTONE_ADMIN_DASHBOARD_SUCCESS.md
+├── monitor.py
+├── navigation
+│   ├── AppNavigator.js
+│   └── routes.js
+├── package-lock.json
+├── package.json
+├── performance_report.txt
+├── PRE_POSTGRESQL_MIGRATION_BACKUP.md
+├── project-structure.txt
+├── project-tree.txt
+├── README.md
+├── SCALABILITY_OPTIMIZATION_SUMMARY.md
+├── scalability_test.py
+├── screens
+│   ├── AnimationScreen.js
+│   ├── ForgotPassword.js
+│   ├── HomeScreen.js
+│   ├── LoanApplicationScreen.js
+│   ├── LoginScreen.js
+│   ├── NetworkTest.js
+│   ├── ProfileScreen.js
+│   ├── ProfileSetupScreen.js
+│   ├── RegisterScreen.js
+│   ├── RepaymentDashboardScreen.js
+│   └── WelcomeScreen.js
+├── services
+│   └── api.js
+├── system_monitor.py
+├── theme
+│   └── ui.js
+├── tsconfig.json
+├── utils
+│   └── cachedFetch.js
+├── vendor
+│   └── bundle
+│       └── ruby
+│           └── 3.4.0
+│               ├── bin
+│               ├── build_info
+│               ├── cache
+│               ├── doc
+│               ├── extensions
+│               ├── gems
+│               ├── plugins
+│               └── specifications
+├── venv
+│   ├── bin
+│   │   ├── activate
+│   │   ├── activate.csh
+│   │   ├── activate.fish
+│   │   ├── Activate.ps1
+│   │   ├── celery
+│   │   ├── django-admin
+│   │   ├── gunicorn
+│   │   ├── normalizer
+│   │   ├── pip
+│   │   ├── pip3
+│   │   ├── pip3.13
+│   │   ├── python -> python3.13
+│   │   ├── python3 -> python3.13
+│   │   ├── python3.13 -> /opt/homebrew/opt/python@3.13/bin/python3.13
+│   │   └── sqlformat
+│   ├── include
+│   │   └── python3.13
+│   ├── lib
+│   │   └── python3.13
+│   │       └── site-packages
+│   │           ├── __pycache__
+│   │           ├── amqp
+│   │           ├── amqp-5.3.1.dist-info
+│   │           ├── asgiref
+│   │           ├── asgiref-3.9.1.dist-info
+│   │           ├── billiard
+│   │           ├── billiard-4.2.1.dist-info
+│   │           ├── celery
+│   │           ├── celery-5.5.3.dist-info
+│   │           ├── certifi
+│   │           ├── certifi-2025.8.3.dist-info
+│   │           ├── charset_normalizer
+│   │           ├── charset_normalizer-3.4.2.dist-info
+│   │           ├── click
+│   │           ├── click_didyoumean
+│   │           ├── click_didyoumean-0.3.1.dist-info
+│   │           ├── click_plugins
+│   │           ├── click_plugins-1.1.1.2.dist-info
+│   │           ├── click_plugins.py
+│   │           ├── click_repl
+│   │           ├── click_repl-0.3.0.dist-info
+│   │           ├── click-8.2.1.dist-info
+│   │           ├── corsheaders
+│   │           ├── dateutil
+│   │           ├── decouple.py
+│   │           ├── django
+│   │           ├── django_cors_headers-4.4.0.dist-info
+│   │           ├── django_filter-25.1.dist-info
+│   │           ├── django_filters
+│   │           ├── django_redis
+│   │           ├── django_redis-6.0.0.dist-info
+│   │           ├── django-5.2.4.dist-info
+│   │           ├── djangorestframework_simplejwt-5.5.1.dist-info
+│   │           ├── djangorestframework-3.16.1.dist-info
+│   │           ├── gunicorn
+│   │           ├── gunicorn-23.0.0.dist-info
+│   │           ├── idna
+│   │           ├── idna-3.10.dist-info
+│   │           ├── jwt
+│   │           ├── kombu
+│   │           ├── kombu-5.5.4.dist-info
+│   │           ├── packaging
+│   │           ├── packaging-25.0.dist-info
+│   │           ├── PIL
+│   │           ├── pillow-10.4.0.dist-info
+│   │           ├── pip
+│   │           ├── pip-25.2.dist-info
+│   │           ├── prompt_toolkit
+│   │           ├── prompt_toolkit-3.0.51.dist-info
+│   │           ├── psutil
+│   │           ├── psutil-7.0.0.dist-info
+│   │           ├── psycopg2
+│   │           ├── psycopg2_binary-2.9.10.dist-info
+│   │           ├── PyJWT-2.10.1.dist-info
+│   │           ├── python_dateutil-2.9.0.post0.dist-info
+│   │           ├── python_decouple-3.8.dist-info
+│   │           ├── redis
+│   │           ├── redis-6.4.0.dist-info
+│   │           ├── requests
+│   │           ├── requests-2.32.4.dist-info
+│   │           ├── rest_framework
+│   │           ├── rest_framework_simplejwt
+│   │           ├── six-1.17.0.dist-info
+│   │           ├── six.py
+│   │           ├── sqlparse
+│   │           ├── sqlparse-0.5.3.dist-info
+│   │           ├── tzdata
+│   │           ├── tzdata-2025.2.dist-info
+│   │           ├── urllib3
+│   │           ├── urllib3-2.5.0.dist-info
+│   │           ├── vine
+│   │           ├── vine-5.1.0.dist-info
+│   │           ├── wcwidth
+│   │           ├── wcwidth-0.2.13.dist-info
+│   │           ├── whitenoise
+│   │           └── whitenoise-6.9.0.dist-info
+│   └── pyvenv.cfg
+├── website
+│   ├── favicon.svg
+│   ├── index_clean.html
+│   ├── index.html
+│   ├── script.js
+│   ├── styles.css
+│   └── Website 
+│       ├── about
+│       │   ├── __init__.py
+│       │   ├── admin.py
+│       │   ├── apps.py
+│       │   ├── migrations
+│       │   │   └── __init__.py
+│       │   ├── models.py
+│       │   ├── tests.py
+│       │   └── views.py
+│       ├── allaweeplus_site
+│       │   ├── __init__.py
+│       │   ├── __pycache__
+│       │   │   ├── __init__.cpython-313.pyc
+│       │   │   └── settings.cpython-313.pyc
+│       │   ├── asgi.py
+│       │   ├── settings.py
+│       │   ├── urls.py
+│       │   └── wsgi.py
+│       ├── contact
+│       │   ├── __init__.py
+│       │   ├── admin.py
+│       │   ├── apps.py
+│       │   ├── migrations
+│       │   │   └── __init__.py
+│       │   ├── models.py
+│       │   ├── tests.py
+│       │   └── views.py
+│       ├── faqs
+│       │   ├── __init__.py
+│       │   ├── admin.py
+│       │   ├── apps.py
+│       │   ├── migrations
+│       │   │   └── __init__.py
+│       │   ├── models.py
+│       │   ├── tests.py
+│       │   └── views.py
+│       ├── manage.py
+│       ├── news
+│       │   ├── __init__.py
+│       │   ├── admin.py
+│       │   ├── apps.py
+│       │   ├── migrations
+│       │   │   └── __init__.py
+│       │   ├── models.py
+│       │   ├── tests.py
+│       │   └── views.py
+│       └── venv
+│           ├── bin
+│           │   ├── activate
+│           │   ├── activate.csh
+│           │   ├── activate.fish
+│           │   ├── Activate.ps1
+│           │   ├── django-admin
+│           │   ├── pip
+│           │   ├── pip3
+│           │   ├── pip3.13
+│           │   ├── python -> python3.13
+│           │   ├── python3 -> python3.13
+│           │   ├── python3.13 -> /opt/homebrew/opt/python@3.13/bin/python3.13
+│           │   └── sqlformat
+│           ├── include
+│           │   └── python3.13
+│           ├── lib
+│           │   └── python3.13
+│           └── pyvenv.cfg
+└── yarn.lock
+
+174 directories, 265 files

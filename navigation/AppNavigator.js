@@ -1,58 +1,76 @@
 // navigation/AppNavigator.js
 import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { useAuth } from '../context/AuthContext';
+import { ROUTES } from './routes';
 
+// Screens
+import AnimationScreen from '../screens/AnimationScreen';
 import WelcomeScreen from '../screens/WelcomeScreen';
 import RegisterScreen from '../screens/RegisterScreen';
 import ForgotPassword from '../screens/ForgotPassword';
-import ProfileSetupScreen from '../screens/ProfileSetupScreen';
 import HomeScreen from '../screens/HomeScreen';
-
-// ⬇️ make sure these paths match your file locations
 import LoanApplicationScreen from '../screens/LoanApplicationScreen';
 import RepaymentDashboardScreen from '../screens/RepaymentDashboardScreen';
 import ProfileScreen from '../screens/ProfileScreen';
-
-import { AuthProvider, useAuth } from '../context/AuthContext';
+import ProfileSetupScreen from '../screens/ProfileSetupScreen';
 
 const Stack = createNativeStackNavigator();
 
-function AuthedStack() {
-  return (
-    <Stack.Navigator screenOptions={{ headerShown: false, animation: 'slide_from_right' }}>
-      <Stack.Screen name="Home" component={HomeScreen} />
-      <Stack.Screen name="LoanApplication" component={LoanApplicationScreen} />
-      <Stack.Screen name="RepaymentDashboard" component={RepaymentDashboardScreen} />
-      <Stack.Screen name="Profile" component={ProfileScreen} />
-      <Stack.Screen name="ProfileSetup" component={ProfileSetupScreen} />
-      {/* add more authenticated screens here */}
-    </Stack.Navigator>
-  );
-}
+const theme = {
+  ...DefaultTheme,
+  colors: { ...DefaultTheme.colors, background: '#ffffff' },
+};
 
-function PublicStack() {
-  return (
-    <Stack.Navigator screenOptions={{ headerShown: false, animation: 'slide_from_right' }}>
-      <Stack.Screen name="Welcome" component={WelcomeScreen} />
-      <Stack.Screen name="Register" component={RegisterScreen} />
-      <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
-      <Stack.Screen name="ProfileSetup" component={ProfileSetupScreen} />
-    </Stack.Navigator>
-  );
-}
-
-function Root() {
+// Splash wrapper: decide where to go after animation
+function AnimationGate({ navigation }) {
   const { isAuthed } = useAuth();
-  return isAuthed ? <AuthedStack /> : <PublicStack />;
+  return (
+    <AnimationScreen
+      onAnimationFinish={() => {
+        navigation.replace(isAuthed ? ROUTES.Home : ROUTES.Welcome);
+      }}
+    />
+  );
+}
+
+function RootStack() {
+  const { isAuthed, bootstrapped } = useAuth();
+
+  // Wait for AsyncStorage bootstrap (briefly)
+  if (!bootstrapped) return null;
+
+  return (
+    <Stack.Navigator
+      initialRouteName={ROUTES.Animation}
+      screenOptions={{ headerShown: false, animation: 'slide_from_right', gestureEnabled: true }}
+    >
+      <Stack.Screen name={ROUTES.Animation} component={AnimationGate} />
+
+      {!isAuthed ? (
+        <>
+          <Stack.Screen name={ROUTES.Welcome} component={WelcomeScreen} />
+          <Stack.Screen name={ROUTES.Register} component={RegisterScreen} />
+          <Stack.Screen name={ROUTES.ForgotPassword} component={ForgotPassword} />
+        </>
+      ) : (
+        <>
+          <Stack.Screen name={ROUTES.Home} component={HomeScreen} />
+          <Stack.Screen name={ROUTES.LoanApplication} component={LoanApplicationScreen} />
+          <Stack.Screen name={ROUTES.RepaymentDashboard} component={RepaymentDashboardScreen} />
+          <Stack.Screen name={ROUTES.Profile} component={ProfileScreen} />
+          <Stack.Screen name={ROUTES.ProfileSetup} component={ProfileSetupScreen} />
+        </>
+      )}
+    </Stack.Navigator>
+  );
 }
 
 export default function AppNavigator() {
   return (
-    <AuthProvider>
-      <NavigationContainer>
-        <Root />
-      </NavigationContainer>
-    </AuthProvider>
+    <NavigationContainer theme={theme}>
+      <RootStack />
+    </NavigationContainer>
   );
 }
